@@ -1,8 +1,12 @@
+import Hero from "./components/home/Hero";
+import Library from "./components/home/Library";
+
 const page = () => {
   return (
-    <div>
-      <h2>Home page</h2>
-    </div>
+    <main>
+      <Hero></Hero>
+      <Library></Library>
+    </main>
   );
 };
 

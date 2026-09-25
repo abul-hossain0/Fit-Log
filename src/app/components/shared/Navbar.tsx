@@ -72,7 +72,6 @@ const Navbar = ({ planCount = 0, savedCount = 0 }: NavbarProps) => {
           </span>
         </Link>
 
-        {/* Desktop Navigation */}
         <div className="hidden items-center gap-2 md:flex">
           <Link
             href="/"
@@ -97,7 +96,6 @@ const Navbar = ({ planCount = 0, savedCount = 0 }: NavbarProps) => {
           </Link>
         </div>
 
-        {/* Desktop Status Badges */}
         <div className="hidden items-center gap-4 md:flex">
           <Link
             href="/my-plan"
@@ -122,7 +120,6 @@ const Navbar = ({ planCount = 0, savedCount = 0 }: NavbarProps) => {
           </Link>
         </div>
 
-        {/* Mobile Menu Button */}
         <button
           type="button"
           onClick={() => setIsMenuOpen((prev) => !prev)}
@@ -178,7 +175,6 @@ const Navbar = ({ planCount = 0, savedCount = 0 }: NavbarProps) => {
         </button>
       </nav>
 
-      {/* Mobile Navigation */}
       {isMenuOpen && (
         <div className="border-t border-[#202329] bg-[#0b0d10] px-4 py-4 md:hidden">
           <div className="mx-auto flex max-w-[1200px] flex-col gap-2">
@@ -206,7 +202,6 @@ const Navbar = ({ planCount = 0, savedCount = 0 }: NavbarProps) => {
               My Plan
             </Link>
 
-            {/* Mobile Counters */}
             <div className="mt-2 flex items-center gap-3 border-t border-[#202329] pt-4">
               <Link
                 href="/my-plan"

@@ -1,2 +1,21 @@
 @import "tailwindcss";
 @plugin "daisyui";
+
+:root {
+  --background: #0b0d10;
+  --foreground: #ffffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: #0b0d10;
+  color: #ffffff;
+}
