@@ -3,13 +3,10 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { useFitLog } from "../providers/FitLogProvider";
 
-interface NavbarProps {
-  planCount?: number;
-  savedCount?: number;
-}
-
-const Navbar = ({ planCount = 0, savedCount = 0 }: NavbarProps) => {
+const Navbar = () => {
+  const { plan, saved } = useFitLog();
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -104,7 +101,7 @@ const Navbar = ({ planCount = 0, savedCount = 0 }: NavbarProps) => {
             <span>Plan</span>
 
             <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#ccff00] px-1.5 text-[10px] font-bold text-black">
-              {planCount}
+              {plan.length}
             </span>
           </Link>
 
@@ -115,7 +112,7 @@ const Navbar = ({ planCount = 0, savedCount = 0 }: NavbarProps) => {
             <span>Saved</span>
 
             <span className="flex h-5 min-w-5 items-center justify-center rounded-full border border-[#454950] px-1.5 text-[10px] font-bold text-[#c7c9cc]">
-              {savedCount}
+              {saved.length}
             </span>
           </Link>
         </div>
