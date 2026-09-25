@@ -16,7 +16,6 @@ const Navbar = () => {
   return (
     <header className="border-b border-[#202329] bg-[#0b0d10]">
       <nav className="mx-auto flex min-h-[68px] max-w-[1200px] items-center justify-between px-4 sm:px-6 lg:px-8">
-        {/* Logo */}
         <Link
           href="/"
           className="flex shrink-0 items-center gap-2"
@@ -207,7 +206,7 @@ const Navbar = () => {
               >
                 <span>Plan</span>
                 <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-[#ccff00] px-1.5 text-[10px] font-bold text-black">
-                  {planCount}
+                  {plan.length}
                 </span>
               </Link>
 
@@ -218,7 +217,7 @@ const Navbar = () => {
               >
                 <span>Saved</span>
                 <span className="flex h-5 min-w-5 items-center justify-center rounded-full border border-[#454950] px-1.5 text-[10px] font-bold text-[#c7c9cc]">
-                  {savedCount}
+                  {saved.length}
                 </span>
               </Link>
             </div>

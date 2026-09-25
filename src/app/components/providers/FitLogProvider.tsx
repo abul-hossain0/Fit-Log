@@ -43,7 +43,6 @@ export const FitLogProvider = ({ children }: FitLogProviderProps) => {
   const [saved, setSaved] = useState<Workout[]>([]);
   const [completedPlanIds, setCompletedPlanIds] = useState<number[]>([]);
 
-  // Load localStorage data
   useEffect(() => {
     try {
       const storedPlan = localStorage.getItem(PLAN_STORAGE_KEY);
@@ -66,17 +65,14 @@ export const FitLogProvider = ({ children }: FitLogProviderProps) => {
     }
   }, []);
 
-  // Save plan
   useEffect(() => {
     localStorage.setItem(PLAN_STORAGE_KEY, JSON.stringify(plan));
   }, [plan]);
 
-  // Save saved workouts
   useEffect(() => {
     localStorage.setItem(SAVED_STORAGE_KEY, JSON.stringify(saved));
   }, [saved]);
 
-  // Save completed workouts
   useEffect(() => {
     localStorage.setItem(
       COMPLETED_STORAGE_KEY,

@@ -46,7 +46,6 @@ const Library = () => {
   return (
     <section id="library" className="px-4 py-8 sm:px-6 lg:px-8 lg:py-10">
       <div className="mx-auto max-w-[1200px]">
-        {/* Header */}
         <div className="mb-5 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <p className="mb-2 text-[8px] font-bold uppercase tracking-[0.15em] text-[#ccff00]">
@@ -62,7 +61,6 @@ const Library = () => {
             </p>
           </div>
 
-          {/* Search */}
           <div className="relative w-full sm:w-[260px]">
             <input
               type="search"
@@ -91,7 +89,6 @@ const Library = () => {
           </div>
         </div>
 
-        {/* Loading */}
         {isLoading && (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {Array.from({ length: 6 }).map((_, index) => (
@@ -110,7 +107,6 @@ const Library = () => {
           </div>
         )}
 
-        {/* No Result */}
         {!isLoading && !error && filteredWorkouts.length === 0 && (
           <div className="rounded-lg border border-[#20242b] bg-[#15181e] px-6 py-14 text-center">
             <p className="text-sm font-bold text-white">No workouts found</p>
@@ -121,7 +117,6 @@ const Library = () => {
           </div>
         )}
 
-        {/* Workout Grid */}
         {!isLoading && !error && filteredWorkouts.length > 0 && (
           <>
             <div className="mb-3 flex items-center justify-between">

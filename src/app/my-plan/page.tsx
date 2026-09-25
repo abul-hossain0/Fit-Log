@@ -80,7 +80,6 @@ const MyPlanPage = () => {
   return (
     <main className="min-h-screen bg-[#0b0d10] px-4 py-8 text-white sm:px-6 lg:px-8 lg:py-10">
       <div className="mx-auto max-w-[1200px]">
-        {/* Header */}
         <div className="mb-7">
           <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.15em] text-[#ccff00]">
             Personal Workspace
@@ -95,7 +94,6 @@ const MyPlanPage = () => {
           </p>
         </div>
 
-        {/* Tabs */}
         <div className="mb-6 flex items-center gap-2 border-b border-[#20242b]">
           <button
             type="button"
@@ -128,7 +126,6 @@ const MyPlanPage = () => {
           </button>
         </div>
 
-        {/* Stats + Sort */}
         <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
           <div className="grid w-full grid-cols-3 border border-[#20242b] bg-[#15181e] sm:max-w-[520px]">
             <MetricCard label="Exercises" value={currentWorkouts.length} />
@@ -138,7 +135,6 @@ const MyPlanPage = () => {
             <MetricCard label="Calories" value={totalCalories} last />
           </div>
 
-          {/* Sort */}
           <div className="flex items-center gap-2 text-[9px] text-[#666b73]">
             <span>Sort By</span>
 
@@ -176,7 +172,6 @@ const MyPlanPage = () => {
           </div>
         </div>
 
-        {/* Loading */}
         {isLoading ? (
           <div className="space-y-3">
             {Array.from({ length: 3 }).map((_, index) => (
@@ -187,7 +182,6 @@ const MyPlanPage = () => {
             ))}
           </div>
         ) : currentWorkouts.length === 0 ? (
-          /* Empty State */
           <div className="rounded-lg border border-[#20242b] bg-[#15181e] px-6 py-16 text-center">
             <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#20242b]">
               <span className="text-xl text-[#666b73]">+</span>
@@ -213,7 +207,6 @@ const MyPlanPage = () => {
             </Link>
           </div>
         ) : (
-          /* Workout List */
           <div className="space-y-3">
             {currentWorkouts.map((workout) => (
               <WorkoutPlanCard
@@ -229,7 +222,6 @@ const MyPlanPage = () => {
         )}
       </div>
 
-      {/* Toast */}
       {toast && <Toast message={toast} onClose={() => setToast(null)} />}
     </main>
   );
@@ -270,7 +262,6 @@ const WorkoutPlanCard = ({
 }: WorkoutPlanCardProps) => {
   return (
     <article className="group flex flex-col gap-4 rounded-lg border border-[#20242b] bg-[#15181e] p-3 transition hover:border-[#30353d] sm:flex-row sm:items-center">
-      {/* Image */}
       <div className="relative h-[120px] w-full shrink-0 overflow-hidden rounded-md bg-[#0b0d10] sm:h-[100px] sm:w-[150px]">
         <Image
           src={workout.image}
@@ -281,7 +272,6 @@ const WorkoutPlanCard = ({
         />
       </div>
 
-      {/* Content */}
       <div className="min-w-0 flex-1">
         <div className="mb-2 flex flex-wrap gap-1.5">
           {workout.muscleGroups.map((muscle) => (
@@ -307,7 +297,6 @@ const WorkoutPlanCard = ({
         </div>
       </div>
 
-      {/* Actions */}
       <div className="flex shrink-0 flex-wrap items-center gap-2">
         <Link
           href={`/workouts/${workout.id}`}

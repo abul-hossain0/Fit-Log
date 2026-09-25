@@ -23,7 +23,6 @@ const WorkoutDetailsPage = async ({ params }: WorkoutDetailsPageProps) => {
   return (
     <main className="min-h-screen bg-[#0b0d10] px-4 py-8 text-white sm:px-6 lg:px-8 lg:py-12">
       <div className="mx-auto max-w-[1200px]">
-        {/* Back Button */}
         <Link
           href="/"
           className="mb-6 inline-flex items-center gap-2 text-[11px] font-medium text-[#858990] transition-colors hover:text-[#ccff00]"
@@ -52,9 +51,7 @@ const WorkoutDetailsPage = async ({ params }: WorkoutDetailsPageProps) => {
           Back to workouts
         </Link>
 
-        {/* Details Layout */}
         <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-start lg:gap-10">
-          {/* Left: Image */}
           <div className="relative aspect-square overflow-hidden rounded-lg border border-[#20242b] bg-[#15181e] sm:aspect-[4/3] lg:aspect-square">
             <Image
               src={workout.image}
@@ -66,19 +63,15 @@ const WorkoutDetailsPage = async ({ params }: WorkoutDetailsPageProps) => {
             />
           </div>
 
-          {/* Right: Content */}
           <div>
-            {/* Title */}
             <h1 className="text-3xl font-black uppercase leading-[0.95] tracking-tight text-white sm:text-4xl lg:text-5xl">
               {workout.name}
             </h1>
 
-            {/* Description */}
             <p className="mt-4 max-w-xl text-xs leading-5 text-[#858990] sm:text-sm sm:leading-6">
               {workout.description}
             </p>
 
-            {/* Category Tags */}
             <div className="mt-5 flex flex-wrap gap-2">
               {workout.muscleGroups.map((group) => (
                 <span
@@ -90,7 +83,6 @@ const WorkoutDetailsPage = async ({ params }: WorkoutDetailsPageProps) => {
               ))}
             </div>
 
-            {/* Specs */}
             <div className="mt-6 overflow-hidden rounded-lg border border-[#20242b] bg-[#111419]">
               <SpecRow label="Equipment" value={workout.equipment} />
 
@@ -110,7 +102,6 @@ const WorkoutDetailsPage = async ({ params }: WorkoutDetailsPageProps) => {
               <SpecRow label="Rating" value={workout.rating.toFixed(1)} last />
             </div>
 
-            {/* Instructions */}
             <div className="mt-7">
               <h2 className="text-xs font-bold uppercase tracking-wide text-white">
                 Instructions
@@ -132,7 +123,6 @@ const WorkoutDetailsPage = async ({ params }: WorkoutDetailsPageProps) => {
               </ol>
             </div>
 
-            {/* CTA Buttons */}
             <WorkoutActions workout={workout}></WorkoutActions>
           </div>
         </div>

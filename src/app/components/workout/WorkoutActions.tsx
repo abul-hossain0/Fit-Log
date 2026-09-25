@@ -61,7 +61,6 @@ const WorkoutActions = ({ workout }: WorkoutActionsProps) => {
   return (
     <>
       <div className="flex flex-col gap-2 sm:flex-row">
-        {/* Add to Plan */}
         <button
           type="button"
           onClick={handleAddToPlan}
@@ -78,8 +77,6 @@ const WorkoutActions = ({ workout }: WorkoutActionsProps) => {
               ? "Plan Full (5/5)"
               : "+ Add to Today's Plan"}
         </button>
-
-        {/* Save */}
         <button
           type="button"
           onClick={handleSaveForLater}
