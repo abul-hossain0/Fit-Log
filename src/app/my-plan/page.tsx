@@ -10,6 +10,8 @@ import type { Workout } from "@/types/fitlog";
 
 type PlanTab = "today" | "saved";
 
+type SortOption = "duration" | "calories" | "rating";
+
 const MyPlanPage = () => {
   const { plan, saved, removeFromPlan, removeFromSaved, markAsDone } =
     useFitLog();
@@ -17,6 +19,7 @@ const MyPlanPage = () => {
   const [activeTab, setActiveTab] = useState<PlanTab>("today");
   const [isLoading, setIsLoading] = useState(true);
   const [toast, setToast] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<SortOption>("duration");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -26,7 +29,23 @@ const MyPlanPage = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const currentWorkouts = activeTab === "today" ? plan : saved;
+  const currentWorkouts = (activeTab === "today" ? plan : saved).toSorted(
+    (a, b) => {
+      if (sortBy === "duration") {
+        return a.duration - b.duration;
+      }
+
+      if (sortBy === "calories") {
+        return a.caloriesBurned - b.caloriesBurned;
+      }
+
+      if (sortBy === "rating") {
+        return b.rating - a.rating;
+      }
+
+      return 0;
+    },
+  );
 
   const totalMinutes = currentWorkouts.reduce(
     (total, workout) => total + workout.duration,
@@ -101,15 +120,35 @@ const MyPlanPage = () => {
             </button>
           </div>
 
+          {/* Sort */}
           <div className="flex items-center gap-2 text-[9px] text-[#666b73]">
             <span>Sort By</span>
 
-            <button
-              type="button"
-              className="flex items-center gap-2 rounded-md border border-[#20242b] bg-[#111419] px-3 py-2 text-[9px] text-[#c7c9cc]"
-            >
-              Duration
-              <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
+            <div className="relative">
+              <select
+                value={sortBy}
+                onChange={(event) =>
+                  setSortBy(event.target.value as SortOption)
+                }
+                className="cursor-pointer appearance-none rounded-md border border-[#20242b] bg-[#111419] py-2 pl-3 pr-8 text-[9px] text-[#c7c9cc] outline-none hover:border-[#30353d] focus:border-[#ccff00]"
+                aria-label="Sort workouts"
+              >
+                <option value="duration">Duration</option>
+
+                <option value="calories">Calories</option>
+
+                <option value="rating">Rating</option>
+              </select>
+
+              {/* Chevron */}
+              <svg
+                className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[#666b73]"
+                width="10"
+                height="10"
+                viewBox="0 0 24 24"
+                fill="none"
+                aria-hidden="true"
+              >
                 <path
                   d="M7 10L12 15L17 10"
                   stroke="currentColor"
@@ -118,7 +157,7 @@ const MyPlanPage = () => {
                   strokeLinejoin="round"
                 />
               </svg>
-            </button>
+            </div>
           </div>
         </div>
 
