@@ -9,17 +9,22 @@ import Toast from "@/app/components/shared/Toast";
 import type { Workout } from "@/types/fitlog";
 
 type PlanTab = "today" | "saved";
-
 type SortOption = "duration" | "calories" | "rating";
 
 const MyPlanPage = () => {
-  const { plan, saved, removeFromPlan, removeFromSaved, markAsDone } =
-    useFitLog();
+  const {
+    plan,
+    saved,
+    removeFromPlan,
+    removeFromSaved,
+    markAsDone,
+    isCompleted,
+  } = useFitLog();
 
   const [activeTab, setActiveTab] = useState<PlanTab>("today");
+  const [sortBy, setSortBy] = useState<SortOption>("duration");
   const [isLoading, setIsLoading] = useState(true);
   const [toast, setToast] = useState<string | null>(null);
-  const [sortBy, setSortBy] = useState<SortOption>("duration");
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -75,49 +80,62 @@ const MyPlanPage = () => {
   return (
     <main className="min-h-screen bg-[#0b0d10] px-4 py-8 text-white sm:px-6 lg:px-8 lg:py-10">
       <div className="mx-auto max-w-[1200px]">
-        <div>
-          <h1 className="text-2xl font-black uppercase tracking-tight sm:text-3xl">
+        {/* Header */}
+        <div className="mb-7">
+          <p className="mb-2 text-[9px] font-bold uppercase tracking-[0.15em] text-[#ccff00]">
+            Personal Workspace
+          </p>
+
+          <h1 className="text-3xl font-black uppercase tracking-[-0.03em] sm:text-4xl">
             My Plan
           </h1>
 
-          <p className="mt-1 text-[10px] text-[#858990] sm:text-xs">
-            Cap of five lifts for today. Finish them, then load more.
+          <p className="mt-2 max-w-xl text-xs leading-5 text-[#858990]">
+            Manage your workout plan, saved exercises, and completed workouts.
           </p>
         </div>
 
-        <div className="mt-6 grid grid-cols-1 overflow-hidden rounded-lg border border-[#20242b] bg-[#15181e] sm:grid-cols-3">
-          <MetricCard label="Exercises" value={currentWorkouts.length} />
+        {/* Tabs */}
+        <div className="mb-6 flex items-center gap-2 border-b border-[#20242b]">
+          <button
+            type="button"
+            onClick={() => setActiveTab("today")}
+            className={`border-b-2 px-4 py-3 text-[10px] font-bold uppercase tracking-wide transition ${
+              activeTab === "today"
+                ? "border-[#ccff00] text-[#ccff00]"
+                : "border-transparent text-[#666b73] hover:text-white"
+            }`}
+          >
+            Today's Plan
+            <span className="ml-2 rounded-full bg-[#20242b] px-2 py-0.5 text-[8px]">
+              {plan.length}
+            </span>
+          </button>
 
-          <MetricCard label="Minutes" value={totalMinutes} />
-
-          <MetricCard label="Calories" value={totalCalories} last />
+          <button
+            type="button"
+            onClick={() => setActiveTab("saved")}
+            className={`border-b-2 px-4 py-3 text-[10px] font-bold uppercase tracking-wide transition ${
+              activeTab === "saved"
+                ? "border-[#ccff00] text-[#ccff00]"
+                : "border-transparent text-[#666b73] hover:text-white"
+            }`}
+          >
+            Saved
+            <span className="ml-2 rounded-full bg-[#20242b] px-2 py-0.5 text-[8px]">
+              {saved.length}
+            </span>
+          </button>
         </div>
 
-        <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="inline-flex w-fit rounded-md border border-[#20242b] bg-[#111419] p-1">
-            <button
-              type="button"
-              onClick={() => setActiveTab("today")}
-              className={`rounded px-4 py-2 text-[9px] font-medium transition-colors ${
-                activeTab === "today"
-                  ? "bg-[#20242b] text-white"
-                  : "text-[#666b73] hover:text-white"
-              }`}
-            >
-              Today&apos;s Plan
-            </button>
+        {/* Stats + Sort */}
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div className="grid w-full grid-cols-3 border border-[#20242b] bg-[#15181e] sm:max-w-[520px]">
+            <MetricCard label="Exercises" value={currentWorkouts.length} />
 
-            <button
-              type="button"
-              onClick={() => setActiveTab("saved")}
-              className={`rounded px-4 py-2 text-[9px] font-medium transition-colors ${
-                activeTab === "saved"
-                  ? "bg-[#20242b] text-white"
-                  : "text-[#666b73] hover:text-white"
-              }`}
-            >
-              Saved
-            </button>
+            <MetricCard label="Minutes" value={totalMinutes} />
+
+            <MetricCard label="Calories" value={totalCalories} last />
           </div>
 
           {/* Sort */}
@@ -134,13 +152,10 @@ const MyPlanPage = () => {
                 aria-label="Sort workouts"
               >
                 <option value="duration">Duration</option>
-
                 <option value="calories">Calories</option>
-
                 <option value="rating">Rating</option>
               </select>
 
-              {/* Chevron */}
               <svg
                 className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 text-[#666b73]"
                 width="10"
@@ -161,35 +176,64 @@ const MyPlanPage = () => {
           </div>
         </div>
 
-        <div className="mt-4">
-          {isLoading ? (
-            <LoadingState />
-          ) : currentWorkouts.length === 0 ? (
-            <EmptyState activeTab={activeTab} />
-          ) : (
-            <div className="space-y-3">
-              {currentWorkouts.map((workout) => (
-                <WorkoutPlanCard
-                  key={workout.id}
-                  workout={workout}
-                  showMarkDone={activeTab === "today"}
-                  onRemove={() => handleRemove(workout)}
-                  onMarkDone={() => handleMarkDone(workout)}
-                />
-              ))}
+        {/* Loading */}
+        {isLoading ? (
+          <div className="space-y-3">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div
+                key={index}
+                className="h-[150px] animate-pulse rounded-lg border border-[#20242b] bg-[#15181e]"
+              />
+            ))}
+          </div>
+        ) : currentWorkouts.length === 0 ? (
+          /* Empty State */
+          <div className="rounded-lg border border-[#20242b] bg-[#15181e] px-6 py-16 text-center">
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-[#20242b]">
+              <span className="text-xl text-[#666b73]">+</span>
             </div>
-          )}
-        </div>
+
+            <h2 className="text-sm font-bold text-white">
+              {activeTab === "today"
+                ? "Your plan is empty"
+                : "No saved workouts"}
+            </h2>
+
+            <p className="mx-auto mt-2 max-w-md text-[10px] leading-5 text-[#666b73]">
+              {activeTab === "today"
+                ? "Add workouts from the library to build your plan."
+                : "Save workouts from the workout details page to find them here later."}
+            </p>
+
+            <Link
+              href="/"
+              className="mt-5 inline-flex rounded-md bg-[#ccff00] px-4 py-2.5 text-[9px] font-bold uppercase tracking-wide text-black transition hover:bg-[#b8e600]"
+            >
+              Browse Workouts
+            </Link>
+          </div>
+        ) : (
+          /* Workout List */
+          <div className="space-y-3">
+            {currentWorkouts.map((workout) => (
+              <WorkoutPlanCard
+                key={workout.id}
+                workout={workout}
+                showMarkDone={activeTab === "today"}
+                completed={isCompleted(workout.id)}
+                onRemove={() => handleRemove(workout)}
+                onMarkDone={() => handleMarkDone(workout)}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
+      {/* Toast */}
       {toast && <Toast message={toast} onClose={() => setToast(null)} />}
     </main>
   );
 };
-
-/* =========================
-   Metric Card
-========================= */
 
 interface MetricCardProps {
   label: string;
@@ -199,74 +243,20 @@ interface MetricCardProps {
 
 const MetricCard = ({ label, value, last = false }: MetricCardProps) => {
   return (
-    <div
-      className={`px-5 py-5 sm:px-6 ${
-        !last ? "border-b border-[#20242b] sm:border-b-0 sm:border-r" : ""
-      }`}
-    >
-      <p className="text-[9px] font-medium text-[#666b73]">{label}</p>
-
-      <p className="mt-1 text-2xl font-black leading-none text-[#ccff00] sm:text-3xl">
-        {value}
-      </p>
-    </div>
-  );
-};
-
-/* =========================
-   Loading
-========================= */
-
-const LoadingState = () => {
-  return (
-    <div className="flex min-h-[260px] items-center justify-center rounded-lg border border-[#20242b] bg-[#111419]">
-      <div className="flex flex-col items-center gap-3">
-        <div className="h-6 w-6 animate-spin rounded-full border-2 border-[#30353d] border-t-[#ccff00]" />
-
-        <p className="text-xs text-[#858990]">Loading workouts...</p>
-      </div>
-    </div>
-  );
-};
-
-/* =========================
-   Empty State
-========================= */
-
-interface EmptyStateProps {
-  activeTab: PlanTab;
-}
-
-const EmptyState = ({ activeTab }: EmptyStateProps) => {
-  return (
-    <div className="flex min-h-[260px] flex-col items-center justify-center rounded-lg border border-dashed border-[#20242b] bg-[#111419] px-6 text-center">
-      <h2 className="text-sm font-black uppercase text-white sm:text-base">
-        Nothing here yet
-      </h2>
-
-      <p className="mt-2 max-w-sm text-[10px] leading-5 text-[#666b73] sm:text-xs">
-        {activeTab === "saved"
-          ? "Save a workout from the library and it will appear here."
-          : "Browse the library and add a lift to get today moving."}
+    <div className={`px-4 py-4 ${!last ? "border-r border-[#20242b]" : ""}`}>
+      <p className="text-[8px] font-bold uppercase tracking-wide text-[#666b73]">
+        {label}
       </p>
 
-      <Link
-        href="/"
-        className="mt-5 rounded-md bg-[#ccff00] px-5 py-2.5 text-[9px] font-bold uppercase text-black hover:bg-[#b8e600]"
-      >
-        Go to workouts
-      </Link>
+      <p className="mt-1 text-lg font-black text-white">{value}</p>
     </div>
   );
 };
-
-/* =========================
-   Workout Plan Card
-========================= */
 
 interface WorkoutPlanCardProps {
   workout: Workout;
   showMarkDone: boolean;
+  completed: boolean;
   onRemove: () => void;
   onMarkDone: () => void;
 }
@@ -274,77 +264,78 @@ interface WorkoutPlanCardProps {
 const WorkoutPlanCard = ({
   workout,
   showMarkDone,
+  completed,
   onRemove,
   onMarkDone,
 }: WorkoutPlanCardProps) => {
   return (
-    <article className="flex flex-col gap-4 rounded-lg border border-[#20242b] bg-[#15181e] p-3 sm:flex-row sm:items-center sm:p-4">
+    <article className="group flex flex-col gap-4 rounded-lg border border-[#20242b] bg-[#15181e] p-3 transition hover:border-[#30353d] sm:flex-row sm:items-center">
       {/* Image */}
-      <div className="relative h-28 w-full shrink-0 overflow-hidden rounded-md bg-[#101216] sm:h-[72px] sm:w-[110px]">
+      <div className="relative h-[120px] w-full shrink-0 overflow-hidden rounded-md bg-[#0b0d10] sm:h-[100px] sm:w-[150px]">
         <Image
           src={workout.image}
           alt={workout.name}
           fill
-          sizes="110px"
           className="object-cover"
+          sizes="150px"
         />
       </div>
 
-      {/* Information */}
+      {/* Content */}
       <div className="min-w-0 flex-1">
-        <h3 className="truncate text-xs font-bold uppercase text-white sm:text-sm">
+        <div className="mb-2 flex flex-wrap gap-1.5">
+          {workout.muscleGroups.map((muscle) => (
+            <span
+              key={muscle}
+              className="rounded bg-[#20242b] px-2 py-1 text-[7px] font-bold uppercase text-[#858990]"
+            >
+              {muscle}
+            </span>
+          ))}
+        </div>
+
+        <h2 className="text-sm font-black uppercase text-white">
           {workout.name}
-        </h3>
+        </h2>
 
         <p className="mt-1 text-[9px] text-[#666b73]">{workout.equipment}</p>
 
-        {/* Stats */}
-        <div className="mt-2 flex flex-wrap items-center gap-3 text-[9px] text-[#858990]">
-          <span className="flex items-center gap-1">
-            <ClockIcon />
-            {workout.duration} min
-          </span>
-
-          <span className="flex items-center gap-1">
-            <FlameIcon />
-            {workout.caloriesBurned} kcal
-          </span>
-
-          <span className="flex items-center gap-1">
-            <StarIcon />
-            {workout.rating}
-          </span>
+        <div className="mt-3 flex flex-wrap gap-4 text-[8px] text-[#858990]">
+          <span>{workout.duration} min</span>
+          <span>{workout.caloriesBurned} kcal</span>
+          <span>★ {workout.rating}</span>
         </div>
       </div>
 
       {/* Actions */}
-      <div className="flex shrink-0 items-center gap-2">
-        {/* View Details */}
+      <div className="flex shrink-0 flex-wrap items-center gap-2">
         <Link
           href={`/workouts/${workout.id}`}
-          className="rounded-md border border-[#30353d] px-3 py-2 text-[8px] font-medium text-[#c7c9cc] hover:border-[#ccff00] hover:text-[#ccff00] sm:px-4"
+          className="rounded-md border border-[#30353d] px-3 py-2 text-[9px] font-bold text-[#c7c9cc] transition hover:border-[#ccff00] hover:text-[#ccff00]"
         >
           View Details
         </Link>
 
-        {/* Mark as Done */}
         {showMarkDone && (
           <button
             type="button"
             onClick={onMarkDone}
-            className="inline-flex items-center gap-1.5 rounded-md bg-[#ccff00] px-3 py-2 text-[8px] font-bold text-black hover:bg-[#b8e600] sm:px-4"
+            disabled={completed}
+            className={`rounded-md px-3 py-2 text-[9px] font-bold transition ${
+              completed
+                ? "cursor-not-allowed bg-[#20242b] text-[#666b73]"
+                : "bg-[#ccff00] text-black hover:bg-[#b8e600]"
+            }`}
           >
-            <CheckIcon />
-            Mark as Done
+            {completed ? "✓ Done" : "✓ Mark as Done"}
           </button>
         )}
 
-        {/* Remove */}
         <button
           type="button"
           onClick={onRemove}
+          className="flex h-8 w-8 items-center justify-center rounded-md border border-[#30353d] text-[#666b73] transition hover:border-red-500 hover:text-red-400"
           aria-label={`Remove ${workout.name}`}
-          className="flex h-8 w-8 items-center justify-center rounded-md text-[#666b73] hover:bg-[#20242b] hover:text-white"
         >
           ×
         </button>
@@ -352,58 +343,5 @@ const WorkoutPlanCard = ({
     </article>
   );
 };
-
-/* =========================
-   Icons
-========================= */
-
-const ClockIcon = () => (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
-    <circle cx="12" cy="12" r="8" stroke="currentColor" strokeWidth="1.8" />
-
-    <path
-      d="M12 8V12L15 14"
-      stroke="currentColor"
-      strokeWidth="1.8"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-const FlameIcon = () => (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="none">
-    <path
-      d="M12 3C12 3 17 7 17 12C17 15.31 14.76 18 12 18C9.24 18 7 15.31 7 12C7 9.5 8.5 7.5 10 6C10 8 11 9 12 10C13 8 13 5 12 3Z"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinejoin="round"
-    />
-
-    <path
-      d="M9 18C9.7 19.8 10.7 21 12 21C13.3 21 14.3 19.8 15 18"
-      stroke="currentColor"
-      strokeWidth="1.7"
-      strokeLinecap="round"
-    />
-  </svg>
-);
-
-const StarIcon = () => (
-  <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor">
-    <path d="M12 3.5L14.6 8.8L20.5 9.7L16.2 13.8L17.2 19.7L12 16.9L6.8 19.7L7.8 13.8L12 3.5Z" />
-  </svg>
-);
-
-const CheckIcon = () => (
-  <svg width="10" height="10" viewBox="0 0 24 24" fill="none">
-    <path
-      d="M5 12L10 17L19 7"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-  </svg>
-);
 
 export default MyPlanPage;
