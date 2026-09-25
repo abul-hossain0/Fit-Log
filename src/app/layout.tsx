@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { FitLogProvider } from "./components/providers/FitLogProvider";
+import Footer from "./components/shared/Footer";
 import Navbar from "./components/shared/Navbar";
 import "./globals.css";
 
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <FitLogProvider>
           <Navbar></Navbar>
           {children}
+          <Footer></Footer>
         </FitLogProvider>
       </body>
     </html>

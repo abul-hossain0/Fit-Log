@@ -18,7 +18,7 @@ const Navbar = () => {
       <nav className="mx-auto flex min-h-[68px] max-w-[1200px] items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
         <Link
-          href="/src/app/assets/logo.png"
+          href="/"
           className="flex shrink-0 items-center gap-2"
           aria-label="FitLog Home"
         >
